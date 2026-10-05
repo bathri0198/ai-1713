@@ -1,0 +1,39 @@
+def solve_8_queens():
+    def is_safe(board, row, col):
+        for i in range(row):
+            if board[i] == col or \
+               board[i] - i == col - row or \
+               board[i] + i == col + row:
+                return False
+        return True
+
+    def solve(row, board, solutions):
+        if row == 8:
+            solutions.append(board[:])
+            return
+        for col in range(8):
+            if is_safe(board, row, col):
+                board[row] = col
+                solve(row + 1, board, solutions)
+                board[row] = -1
+
+    solutions = []
+    solve(0, [-1] * 8, solutions)
+    return solutions
+
+# Example Usage:
+if __name__ == "__main__":
+    sols = solve_8_queens()
+    print(f"Total possible solutions: {len(sols)}")
+    print("First solution (column positions per row):", sols[0])
+    
+    # Printing the board visually for the first solution
+    print("\nVisual representation of the first solution:")
+    for row in range(8):
+        line = ""
+        for col in range(8):
+            if sols[0][row] == col:
+                line += " Q "
+            else:
+                line += " . "
+        print(line)
