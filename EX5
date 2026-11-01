@@ -1,0 +1,32 @@
+from collections import deque
+
+# State: (missionaries_left, cannibals_left, boat_side)
+start = (3, 3, 0)  # 0 = left, 1 = right
+goal = (0, 0, 1)
+moves = [(1, 0), (2, 0), (0, 1), (0, 2), (1, 1)]
+
+def valid(m, c):
+    mr, cr = 3 - m, 3 - c
+    return (0 <= m <= 3 and 0 <= c <= 3 and
+            (m == 0 or m >= c) and (mr == 0 or mr >= cr))
+
+queue = deque([(start, [start])])
+visited = {start}
+answer = None
+
+while queue:
+    state, path = queue.popleft()
+    if state == goal:
+        answer = path
+        break
+    m, c, side = state
+    for dm, dc in moves:
+        if side == 0:
+            nxt = (m - dm, c - dc, 1)
+        else:
+            nxt = (m + dm, c + dc, 0)
+        if valid(nxt[0], nxt[1]) and nxt not in visited:
+            visited.add(nxt)
+            queue.append((nxt, path + [nxt]))
+
+print(answer if answer else "No solution found.")
