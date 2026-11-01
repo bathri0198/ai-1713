@@ -1,0 +1,11 @@
+rooms = {"A": 0, "B": 0}
+location = "A"
+
+while 0 in rooms.values():
+    if rooms[location] == 0:
+        print("Cleaning room", location)
+        rooms[location] = 1
+    else:
+        location = "B" if location == "A" else "A"
+
+print("All rooms are clean:", rooms)
