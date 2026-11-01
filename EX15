@@ -1,0 +1,14 @@
+from sklearn.tree import DecisionTreeClassifier
+
+# Features: [hours_studied, attendance_percent]
+X = [[1, 50], [2, 60], [3, 65], [5, 80],
+     [6, 85], [7, 90], [2, 45], [8, 95]]
+y = ["Fail", "Fail", "Fail", "Pass",
+     "Pass", "Pass", "Fail", "Pass"]
+
+model = DecisionTreeClassifier(random_state=0)
+model.fit(X, y)
+
+prediction = model.predict([[4, 75]])
+print("Prediction:", prediction[0])
+
