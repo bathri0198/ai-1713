@@ -1,0 +1,44 @@
+import heapq
+
+start = (1, 2, 3, 4, 0, 6, 7, 5, 8)
+goal = (1, 2, 3, 4, 5, 6, 7, 8, 0)
+
+def heuristic(state):
+    total = 0
+    for i, value in enumerate(state):
+        if value != 0:
+            j = goal.index(value)
+            total += abs(i // 3 - j // 3) + abs(i % 3 - j % 3)
+    return total
+
+def astar(start):
+    heap = [(heuristic(start), 0, start, [])]
+    best = {start: 0}
+    while heap:
+        _, cost, state, path = heapq.heappop(heap)
+        if state == goal:
+            return path + [state]
+        if cost != best.get(state):
+            continue
+        zero = state.index(0)
+        r, c = divmod(zero, 3)
+        for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < 3 and 0 <= nc < 3:
+                j = nr * 3 + nc
+                arr = list(state)
+                arr[zero], arr[j] = arr[j], arr[zero]
+                nxt = tuple(arr)
+                new_cost = cost + 1
+                if new_cost < best.get(nxt, float("inf")):
+                    best[nxt] = new_cost
+                    heapq.heappush(heap, (new_cost + heuristic(nxt),
+                                          new_cost, nxt, path + [state]))
+    return None
+
+solution = astar(start)
+print("Moves:", len(solution) - 1 if solution else "No solution")
+if solution:
+    for s in solution:
+        print(s[:3], s[3:6], s[6:], sep="\\n")
+        print()
