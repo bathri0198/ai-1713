@@ -1,0 +1,30 @@
+board = [" "] * 9
+lines = [(0,1,2),(3,4,5),(0,3,6),(1,4,7),
+         (2,5,8),(0,4,8),(2,4,6)]
+
+def winner(mark):
+    return any(all(board[i] == mark for i in line) for line in lines)
+
+def minimax(is_max):
+    if winner("X"): return 1
+    if winner("O"): return -1
+    if " " not in board: return 0
+    scores = []
+    mark = "X" if is_max else "O"
+    for i in range(9):
+        if board[i] == " ":
+            board[i] = mark
+            scores.append(minimax(not is_max))
+            board[i] = " "
+    return max(scores) if is_max else min(scores)
+
+best_move, best_score = None, -float("inf")
+for i in range(9):
+    if board[i] == " ":
+        board[i] = "X"
+        score = minimax(False)
+        board[i] = " "
+        if score > best_score:
+            best_score, best_move = score, i
+
+print("Best move for X is position", best_move + 1)
